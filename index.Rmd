@@ -1,0 +1,257 @@
+---
+pagetitle: Estimating causal effects in the simple linear regression model
+output: 
+  revealjs::revealjs_presentation:
+    incremental: false
+    theme: solarized
+    self_contained: false
+    # reveal_plugins: ["menu","notes","chalkboard"]
+    reveal_plugins: ["menu"]
+    highlight: pygments
+    center: true
+    transition: none
+    background_transition: none 
+    reveal_options:
+      # chalkboard:
+      #   theme: whiteboard
+      #   toggleNotesButton: true
+      #   toggleChalkboardButton: true
+      menu:
+        numbers: true
+      slideNumber: true
+      previewLinks: false
+    fig_caption: true
+    pandoc_args:
+    - --indented-code-classes
+    - lineNumbers
+    css: mystyle.css
+    
+--- 
+
+<section>
+
+<h1>Estimating causal effects in the simple linear regression model</h1>
+
+Based on Stock and Watson, ch. 4
+
+<br>
+
+<h2>[Jesper Bagger](mailto:jesper.bagger@rhul.ac.uk)</h2>
+
+<h3>EC2203 | Royal Holloway | 2020/21</h3>
+
+</section>
+
+
+```{r results='asis', echo=FALSE, include=FALSE}
+library(AER) # include Applied Econometrics with R package; contains many datasets
+data(CASchools) # Load CASchools data
+# Generate a couple of useful variables
+CASchools$STR <- CASchools$students/CASchools$teachers  # Student-teacher ratio
+CASchools$Score <- (CASchools$read + CASchools$math)/2  # Student test score
+```
+
+# Causal effects
+
+## Causality
+
+<!-- - **Causality** means that a specific action or attribute leads to a specific, measureable consequence -->
+
+- Questions about causal relationships can be framed as **ceteris paribus** ("other things equal") questions:
+
+  <div class="box">
+  What is the expected change in pupil test scores $Score$ if class size $STR$ is reduced by, say, one pupil, with *all* other determinants of $Score$ held constant?
+  </div>
+
+- Suggests an experimental approach to defining and estimating causal effects
+
+## Randomized Controlled Experiment
+
+- **Randomized controlled experiment**
+
+  - Treatment group: receives treatment
+
+  - Control group: receives no treatment
+  
+  - Randomized treatment assignment
+  
+- **Causal effect**: the difference in (average) outcome b/w treatment and control groups in an experiment
+
+- Problem w/o random treatment assignment is that the regressor ($STR$), may be related to other factors that influence the outcome ($Score$):  **endogeneous treatment**
+
+<!-- ## Randomized Controlled Experiment (cont'd) -->
+
+<!-- - Experiments provide a conceptually straightforward way to estimate causal effects; however, may be -->
+
+<!--   - unethical -->
+
+<!--   - hard to execute satisfactorily -->
+
+<!--   - prohibitively expensive -->
+
+<!-- - Problem w/o random treatment assignment is that the regressor, $STR$, may be related to other factors that influence the outcome, $Score$: treatment is **endogeneous** -->
+
+# Causal effects in simple the linear regression model
+
+## Causal effects in simple the linear regression model
+
+<div class="box">
+$$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad i = 1,\ldots,n$$
+</div>
+
+- Define $\beta_1$ to be the **causal effect** of $X$ on $Y$: the effect of $X$ on $Y$, all **other things equal** (i.e. holding $u$ constant)
+
+- Under what conditions is the OLS estimator $\hat{\beta}_1$ a **consistent** and **unbiased** estimator of $\beta_1$, when $\beta_1$ is defined as a causal effect?
+
+## The Least Squares Assumptions for Causal Inference
+
+<div class="box">
+$$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad i=1,\ldots,n$$
+
+where $\beta_1$ is a causal effect of $X$ on $Y$. The OLS estimator $\hat{\beta}_1$ is a consistent and unbiased estimator of $\beta_1$ if
+
+1. Zero conditional mean: $\mathrm{E}(u_i|X_i) = 0$
+
+2. $(Y_{i},X_i;i=1,\ldots,n\,)$ is an i.i.d. sample
+
+3. Large outliers of $X_i$ and $Y_i$ are unlikely: $Y_i$ and $X_i$ have nonzero finite 4th moments
+
+## The zero conditional mean assumption
+
+<div class="box">
+$$\mathrm{E}(u_i|X_i) = 0$$
+</div>
+
+- Different $X_i$-values are not associated with systematic changes in mean $u_i$: $X_i$ is **as-if randomly assigned**
+
+- Zero conditional mean implies zero covariance between the regressor and the error term
+
+  $$\mathrm{E}(u_i|X_i) = 0 \Rightarrow \mathrm{Cov}(u_i,X_i) = 0$$
+
+# The OLS estimator and zero conditional mean assumption
+
+## The OLS estimator of $\beta_1$
+
+<br>
+
+<div class="box">
+$$\hat{\beta}_1 = \beta_1 + \frac{\frac{1}{n}\sum_{i=1}^n (X_i-\overline{X}) u_i}{\frac{1}{n} \sum_{i=1}^n (X_i-\overline{X})^2} \overset{p}{\rightarrow} \beta_1 + \frac{\mathrm{E}[(X_i-\mu_X) \mathrm{E}(u_i|X_i)]}{\sigma_X^2}$$ 
+</div>
+
+- If $\mathrm{E}(u_i|X_i) = 0$, so if $X_i$ is as-if randomly assigned in the population, then $\hat{\beta}_1$ is consistent for $\beta_1$: $\hat{\beta}_1\overset{p}{\rightarrow} \beta_1$ 
+
+  Interpretation: in large samples, the probability that $\hat{\beta}_1$ is very close to $\beta_1$ is very close to 1!
+  
+## Why do we need the zero conditional mean assumption?
+
+$$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) < 0$$
+```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
+# set a seed to make the results reproducible
+set.seed(456457)
+# simulate the data 
+X <- runif(50, min = 10, max = 20)
+u <- 0*X+rnorm(50, mean = 2, sd = 2)
+Y <- 650 + 0*X + u
+simdat1 <- data.frame(Y,X,u)
+X <- runif(50, min = 20, max = 30)
+u <- 0*X+rnorm(50, mean = -2, sd = 2)
+Y <- 650 + 0*X + u
+simdat2 <- data.frame(Y,X,u)
+simdat <- rbind(simdat1,simdat2)
+lm <- lm(Y ~ X, data = simdat)
+# Scatter plot of Score against STR
+plot(simdat1$X,simdat1$Y, 
+     col = "blue", # Color of data points
+     xlab = "X (student-teacher ratio)",  # Label on x-axis
+     ylab = "Y (test score)",   # Label on y-axis
+     xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
+     ylim = c(640,660)) # Range of y-axis (from 600 to 720)
+points(simdat2$X,simdat2$Y, 
+     col = "red")
+abline(648,0,
+       col = "red",
+       lwd = 3)
+abline(652,0,
+       col = "blue",
+       lwd = 3)
+```
+
+## Why do we need the zero conditional mean assumption?
+
+$$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) < 0$$
+```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
+# set a seed to make the results reproducible
+set.seed(456457)
+# simulate the data 
+X <- runif(50, min = 10, max = 20)
+u <- 0*X+rnorm(50, mean = 2, sd = 2)
+Y <- 650 + 0*X + u
+simdat1 <- data.frame(Y,X,u)
+X <- runif(50, min = 20, max = 30)
+u <- 0*X+rnorm(50, mean = -2, sd = 2)
+Y <- 650 + 0*X + u
+simdat2 <- data.frame(Y,X,u)
+simdat <- rbind(simdat1,simdat2)
+lm <- lm(Y ~ X, data = simdat)
+# Scatter plot of Score against STR
+plot(simdat1$X,simdat1$Y, 
+     col = "green", # Color of data points
+     xlab = "X (student-teacher ratio)",  # Label on x-axis
+     ylab = "Y (test score)",   # Label on y-axis
+     xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
+     ylim = c(640,660)) # Range of y-axis (from 600 to 720)
+points(simdat2$X,simdat2$Y, 
+     col = "green")
+abline(lm,
+       col = "green",
+       lwd = 3)
+```
+
+## Why do we need the zero conditional mean assumption?
+
+$$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) < 0$$
+```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
+# set a seed to make the results reproducible
+set.seed(456457)
+# simulate the data 
+X <- runif(50, min = 10, max = 20)
+u <- 0*X+rnorm(50, mean = 2, sd = 2)
+Y <- 650 + 0*X + u
+simdat1 <- data.frame(Y,X,u)
+X <- runif(50, min = 20, max = 30)
+u <- 0*X+rnorm(50, mean = -2, sd = 2)
+Y <- 650 + 0*X + u
+simdat2 <- data.frame(Y,X,u)
+simdat <- rbind(simdat1,simdat2)
+lm <- lm(Y ~ X, data = simdat)
+# Scatter plot of Score against STR
+plot(simdat1$X,simdat1$Y, 
+     col = "green", # Color of data points
+     xlab = "X (student-teacher ratio)",  # Label on x-axis
+     ylab = "Y (test score)",   # Label on y-axis
+     xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
+     ylim = c(640,660)) # Range of y-axis (from 600 to 720)
+points(simdat2$X,simdat2$Y, 
+     col = "green")
+abline(648,0,
+       col = "blue",
+       lwd = 3)
+abline(652,0,
+       col = "red",
+       lwd = 3)
+abline(lm,
+       col = "green",
+       lwd = 3)
+```
+
+# Summary
+
+## Summary
+
+- Key assumption for estimating causal effect of $X$ on $Y$: $\mathrm{E}(u|X)=0$; i.e. $X$ is as-if randomly assigned
+
+  This is an assumption about the distribution of regressors in the population
+
+- $\mathrm{E}(u|X)=0$ is a **very strong** assumption, and is unlikely to hold in a given application
+
+- Estimating causal effects on observational data is very challenging because "treatments" are endogenous
