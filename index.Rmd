@@ -158,90 +158,63 @@ u <- 0*X+rnorm(50, mean = -2, sd = 2)
 Y <- 650 + 0*X + u
 simdat2 <- data.frame(Y,X,u)
 simdat <- rbind(simdat1,simdat2)
+# Compute OLS estimates on pooled data (group 1 and group 2)
 lm <- lm(Y ~ X, data = simdat)
-# Scatter plot of Score against STR
-plot(simdat1$X,simdat1$Y, 
+# Scatter plot X vs Y, split by u-groups
+plot(simdat1$X,simdat1$Y, # Data points, group 1 (small X)
      col = "blue", # Color of data points
      xlab = "X (student-teacher ratio)",  # Label on x-axis
      ylab = "Y (test score)",   # Label on y-axis
      xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
-     ylim = c(640,660)) # Range of y-axis (from 600 to 720)
-points(simdat2$X,simdat2$Y, 
-     col = "red")
-abline(648,0,
-       col = "red",
-       lwd = 3)
-abline(652,0,
-       col = "blue",
-       lwd = 3)
+     ylim = c(640,660)) # Range of y-axis (from 640 to 660)
+points(simdat2$X,simdat2$Y, # Data points, group 2 (large X)
+       col = "red") # Color of data points
+abline(648,0, # Population regression line, small X
+       col = "red", # Color of population regression line, small X
+       lwd = 3) # Set linewidth
+abline(652,0, # Population regression line, large X
+       col = "blue", # Color of population regression line, large X
+       lwd = 3) # Set linewidth
 ```
 
 ## Why do we need the zero conditional mean assumption?
 
 $$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) < 0$$
 ```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
-# set a seed to make the results reproducible
-set.seed(456457)
-# simulate the data 
-X <- runif(50, min = 10, max = 20)
-u <- 0*X+rnorm(50, mean = 2, sd = 2)
-Y <- 650 + 0*X + u
-simdat1 <- data.frame(Y,X,u)
-X <- runif(50, min = 20, max = 30)
-u <- 0*X+rnorm(50, mean = -2, sd = 2)
-Y <- 650 + 0*X + u
-simdat2 <- data.frame(Y,X,u)
-simdat <- rbind(simdat1,simdat2)
-lm <- lm(Y ~ X, data = simdat)
-# Scatter plot of Score against STR
-plot(simdat1$X,simdat1$Y, 
+# Scatter plot X vs Y, pooled groups
+plot(simdat$X,simdat$Y, # Data points, pooled groups
      col = "green", # Color of data points
      xlab = "X (student-teacher ratio)",  # Label on x-axis
      ylab = "Y (test score)",   # Label on y-axis
      xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
-     ylim = c(640,660)) # Range of y-axis (from 600 to 720)
-points(simdat2$X,simdat2$Y, 
-     col = "green")
-abline(lm,
-       col = "green",
-       lwd = 3)
+     ylim = c(640,660)) # Range of y-axis (from 640 to 660)
+# Add sample regression function
+abline(lm, # Sample regression function in lm
+       col = "green", # Plot in green
+       lwd = 3) # Set linewidth 
 ```
 
 ## Why do we need the zero conditional mean assumption?
 
 $$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) < 0$$
 ```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
-# set a seed to make the results reproducible
-set.seed(456457)
-# simulate the data 
-X <- runif(50, min = 10, max = 20)
-u <- 0*X+rnorm(50, mean = 2, sd = 2)
-Y <- 650 + 0*X + u
-simdat1 <- data.frame(Y,X,u)
-X <- runif(50, min = 20, max = 30)
-u <- 0*X+rnorm(50, mean = -2, sd = 2)
-Y <- 650 + 0*X + u
-simdat2 <- data.frame(Y,X,u)
-simdat <- rbind(simdat1,simdat2)
-lm <- lm(Y ~ X, data = simdat)
-# Scatter plot of Score against STR
-plot(simdat1$X,simdat1$Y, 
+# Scatter plot X vs Y, pooled groups
+plot(simdat$X,simdat$Y, # Data points, pooled groups
      col = "green", # Color of data points
      xlab = "X (student-teacher ratio)",  # Label on x-axis
      ylab = "Y (test score)",   # Label on y-axis
      xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
-     ylim = c(640,660)) # Range of y-axis (from 600 to 720)
-points(simdat2$X,simdat2$Y, 
-     col = "green")
-abline(648,0,
-       col = "blue",
-       lwd = 3)
-abline(652,0,
-       col = "red",
-       lwd = 3)
-abline(lm,
-       col = "green",
-       lwd = 3)
+     ylim = c(640,660)) # Range of y-axis (from 640 to 660)
+abline(648,0, # Population regression line, small X
+       col = "red", # Color of population regression line, small X
+       lwd = 3) # Set linewidth
+abline(652,0, # Population regression line, large X
+       col = "blue", # Color of population regression line, large X
+       lwd = 3) # Set linewidth
+# Add sample regression function
+abline(lm, # Sample regression function in lm
+       col = "green", # Plot in green
+       lwd = 3) # Set linewidth 
 ```
 
 # Summary
