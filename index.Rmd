@@ -183,14 +183,27 @@ $$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) 
 ```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
 # Scatter plot X vs Y, pooled groups
 plot(simdat$X,simdat$Y, # Data points, pooled groups
-     col = "green", # Color of data points
+     col = "green4", # Color of data points
+     xlab = "X (student-teacher ratio)",  # Label on x-axis
+     ylab = "Y (test score)",   # Label on y-axis
+     xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
+     ylim = c(640,660)) # Range of y-axis (from 640 to 660)
+```
+
+## Why do we need the zero conditional mean assumption?
+
+$$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) < 0$$
+```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
+# Scatter plot X vs Y, pooled groups
+plot(simdat$X,simdat$Y, # Data points, pooled groups
+     col = "green4", # Color of data points
      xlab = "X (student-teacher ratio)",  # Label on x-axis
      ylab = "Y (test score)",   # Label on y-axis
      xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
      ylim = c(640,660)) # Range of y-axis (from 640 to 660)
 # Add sample regression function
 abline(lm, # Sample regression function in lm
-       col = "green", # Plot in green
+       col = "green4", # Plot in green
        lwd = 3) # Set linewidth 
 ```
 
@@ -200,7 +213,7 @@ $$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) 
 ```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
 # Scatter plot X vs Y, pooled groups
 plot(simdat$X,simdat$Y, # Data points, pooled groups
-     col = "green", # Color of data points
+     col = "green4", # Color of data points
      xlab = "X (student-teacher ratio)",  # Label on x-axis
      ylab = "Y (test score)",   # Label on y-axis
      xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
@@ -213,7 +226,7 @@ abline(652,0, # Population regression line, large X
        lwd = 3) # Set linewidth
 # Add sample regression function
 abline(lm, # Sample regression function in lm
-       col = "green", # Plot in green
+       col = "green4", # Plot in green
        lwd = 3) # Set linewidth 
 ```
 
