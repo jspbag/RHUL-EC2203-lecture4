@@ -124,7 +124,7 @@ $$\mathrm{E}(u_i|X_i) = 0$$
 
 - Different $X_i$-values are not associated with systematic changes in mean $u_i$: $X_i$ is **as-if randomly assigned**
 
-- Zero conditional mean implies zero covariance between the regressor and the error term
+- Zero conditional mean implies zero covariance b/w the regressor and the error term
 
   $$\mathrm{E}(u_i|X_i) = 0 \Rightarrow \mathrm{Cov}(u_i,X_i) = 0$$
 
