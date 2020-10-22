@@ -213,7 +213,7 @@ $$Y_i = \beta_0 + \beta_1 X_i + u_i; \quad \beta_1 =0; \, \mathrm{cov}(u_i,X_i) 
 ```{r echo=FALSE, eval=TRUE, error=FALSE, warning=FALSE}
 # Scatter plot X vs Y, pooled groups
 plot(simdat$X,simdat$Y, # Data points, pooled groups
-     col = "green4", # Color of data points
+     col = "green4", # Color of data points, dark green
      xlab = "X (student-teacher ratio)",  # Label on x-axis
      ylab = "Y (test score)",   # Label on y-axis
      xlim = c(10, 30),  # Range of x-axis (from 10 to 30)
